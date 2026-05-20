@@ -1,0 +1,85 @@
+:root {
+  --bg: #0a0a0f;
+  --bg-card: #0f0f17;
+  --bg-card-hover: #13131e;
+  --accent: #64ffda;
+  --accent-dim: rgba(100, 255, 218, 0.08);
+  --accent-border: rgba(100, 255, 218, 0.2);
+  --text: #8892b0;
+  --text-bright: #ccd6f6;
+  --text-white: #e6f1ff;
+  --border: rgba(100, 255, 218, 0.08);
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  --shadow-accent: 0 0 20px rgba(100, 255, 218, 0.07);
+
+  --mono: 'SF Mono', 'Fira Code', 'Cascadia Code', ui-monospace, Consolas, monospace;
+  --sans: 'Calibre', 'Inter', 'San Francisco', 'SF Pro Text', system-ui, sans-serif;
+
+  font: 16px/1.6 var(--sans);
+  color: var(--text);
+  background: var(--bg);
+  color-scheme: dark;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+}
+
+#root {
+  width: 100%;
+  min-height: 100svh;
+}
+
+h1, h2, h3, h4 {
+  color: var(--text-bright);
+  margin: 0;
+  font-weight: 600;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+::selection {
+  background: rgba(100, 255, 218, 0.2);
+  color: var(--accent);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(100, 255, 218, 0.15);
+  border-radius: 3px;
+}
+
+@media (max-width: 768px) {
+  :root {
+    font-size: 15px;
+  }
+}
