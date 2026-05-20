@@ -53,6 +53,7 @@ const PROJECTS = [
       'Financial transaction processing service consuming real-time Kafka events with atomic transaction management ensuring 100% consistency under concurrent load. Integrated external Incentive REST API post-validation.',
     tech: ['Java', 'Spring Boot', 'Apache Kafka', 'Spring Data JPA', 'H2', 'REST'],
     tag: 'JPMorgan Chase Forage',
+    github: 'https://github.com/2u5hi/midas-core',
   },
   {
     name: 'Daikibo Analysis',
