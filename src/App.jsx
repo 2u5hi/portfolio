@@ -3,42 +3,53 @@ import headshot from './assets/headshot.png'
 import './App.css'
 
 const FEATURED = {
-  name: 'CorrLabX',
+  name: 'Lendable',
+  file: 'underwriter.py',
   description:
-    'Full-stack quantitative research platform for identifying pricing inefficiencies in equity markets. The scoring engine combines three statistical signals — return autocorrelation, volatility clustering, and ARIMA predictive edge — into a weighted composite score used to surface tradeable inefficiencies across 10+ equity pairs.',
-  tech: ['Python', 'React', 'Node.js', 'Express', 'Pandas', 'statsmodels', 'Railway', 'Vercel'],
-  github: 'https://github.com/2u5hi/CorrLabX',
-  live: 'https://corr-lab-x.vercel.app/',
-  snippet: `def autocorrelation_score(returns):
-    acf_vals = acf(returns, nlags=5, fft=False)[1:]
-    return round(float(np.mean(np.abs(acf_vals))), 4)
+    'Full-stack AI mortgage document analyzer that uses Claude Sonnet via AWS Bedrock to natively parse mortgage PDFs — W-2s, pay stubs, bank statements, and Form 1003 — extracting income, FICO tier, DTI, and LTV inputs with cross-document consistency checks to produce structured underwriting recommendations. Secured with Clerk JWT middleware and shipped via Docker and GitHub Actions CI/CD to Fly.io.',
+  tech: ['Python', 'FastAPI', 'React', 'AWS Bedrock', 'DynamoDB', 'S3', 'Docker', 'Fly.io'],
+  github: 'https://github.com/2u5hi/lendable.ai',
+  live: 'https://lendable.fly.dev/',
+  snippet: `async def run_underwriting(doc_keys: list[str]) -> dict:
+    # load each mortgage PDF from S3 and pass bytes
+    # directly to Claude — no OCR, no text extraction
+    content = []
+    for key in doc_keys:
+        obj = await s3.get_object(Bucket=BUCKET, Key=key)
+        content.append({
+            "type": "document",
+            "source": {
+                "type": "base64",
+                "media_type": "application/pdf",
+                "data": base64.b64encode(
+                    await obj["Body"].read()
+                ).decode(),
+            },
+        })
+    content.append({"type": "text", "text": UNDERWRITING_PROMPT})
 
-def volatility_clustering_score(returns):
-    squared  = returns ** 2
-    acf_vals = acf(squared, nlags=5, fft=False)[1:]
-    return round(float(np.mean(np.abs(acf_vals))), 4)
-
-def arima_edge_score(returns):
-    train = returns.iloc[:int(len(returns) * 0.8)]
-    test  = returns.iloc[int(len(returns) * 0.8):]
-    baseline_rmse = np.sqrt(mean_squared_error(
-        test, np.full(len(test), train.mean())
-    ))
-    model = auto_arima(train, seasonal=False,
-                       suppress_warnings=True)
-    preds = [model.predict(n_periods=1)[0]
-             for _ in range(len(test))]
-    arima_rmse = np.sqrt(mean_squared_error(test, preds))
-    return round(float(max(0, baseline_rmse - arima_rmse)), 6)
-
-# weighted composite — inefficiency score /100
-ac_normalized   = min(ac_score / 0.20, 1.0) * 40
-vc_normalized   = min(vc_score / 0.20, 1.0) * 30
-edge_normalized = min(edge_score / 0.05, 1.0) * 30
-final = round(ac_normalized + vc_normalized + edge_normalized, 2)`,
+    resp = bedrock.invoke_model(
+        modelId="anthropic.claude-sonnet-4-5",
+        body=json.dumps({
+            "anthropic_version": "bedrock-2023-05-31",
+            "max_tokens": 2048,
+            "messages": [{"role": "user", "content": content}],
+        }),
+    )
+    return parse_recommendation(
+        json.loads(resp["body"].read())["content"][0]["text"]
+    )`,
 }
 
 const PROJECTS = [
+  {
+    name: 'CorrLabX',
+    description:
+      'Full-stack quantitative research platform for identifying pricing inefficiencies in equity markets. The scoring engine combines return autocorrelation, volatility clustering, and ARIMA predictive edge into a weighted composite score surfacing tradeable inefficiencies across 10+ equity pairs.',
+    tech: ['Python', 'React', 'Node.js', 'Express', 'Pandas', 'statsmodels', 'Railway', 'Vercel'],
+    github: 'https://github.com/2u5hi/CorrLabX',
+    live: 'https://corr-lab-x.vercel.app/',
+  },
   {
     name: 'TravelMS',
     description:
@@ -99,8 +110,8 @@ const EXPERIENCE = [
 
 const SKILLS = {
   Languages: ['Python', 'JavaScript', 'TypeScript', 'Java', 'SQL', 'HTML/CSS'],
-  Frameworks: ['React', 'Angular', 'Spring Boot', 'Node.js', 'Express', 'Pandas'],
-  Tools: ['Git', 'MySQL', 'Apache Kafka', 'Vercel', 'Railway', 'Tableau'],
+  Frameworks: ['React', 'Angular', 'FastAPI', 'Spring Boot', 'Node.js', 'Express', 'Pandas'],
+  Tools: ['Git', 'Docker', 'AWS', 'MySQL', 'Apache Kafka', 'Vercel', 'Fly.io', 'Tableau'],
 }
 
 function GitHubIcon() {
@@ -193,12 +204,12 @@ export default function App() {
             <button className="btn-nav">Resume ▾</button>
             <ul className="resume-menu">
               <li>
-                <a href="/SWE_updated_DA.pdf" target="_blank" rel="noreferrer">
+                <a href="/Dhanush Annoji SWE.pdf" target="_blank" rel="noreferrer">
                   Software Engineer
                 </a>
               </li>
               <li>
-                <a href="/Dhanush Annoji - Data Resume.pdf" target="_blank" rel="noreferrer">
+                <a href="/Dhanush Annoji Data Scientist.pdf" target="_blank" rel="noreferrer">
                   Data Scientist
                 </a>
               </li>
@@ -327,10 +338,10 @@ export default function App() {
                   {FEATURED.tech.map((t) => <li key={t}>{t}</li>)}
                 </ul>
                 <div className="featured-links">
-                  <a href={FEATURED.github} target="_blank" rel="noreferrer" aria-label="CorrLabX GitHub">
+                  <a href={FEATURED.github} target="_blank" rel="noreferrer" aria-label={`${FEATURED.name} GitHub`}>
                     <GitHubIcon />
                   </a>
-                  <a href={FEATURED.live} target="_blank" rel="noreferrer" aria-label="CorrLabX live">
+                  <a href={FEATURED.live} target="_blank" rel="noreferrer" aria-label={`${FEATURED.name} live`}>
                     <ExternalIcon />
                   </a>
                 </div>
@@ -340,7 +351,7 @@ export default function App() {
                   <span className="chrome-dot dot-red" />
                   <span className="chrome-dot dot-yellow" />
                   <span className="chrome-dot dot-green" />
-                  <span className="chrome-file">inefficiency_score.py</span>
+                  <span className="chrome-file">{FEATURED.file}</span>
                 </div>
                 <pre className="code-body"><code>{FEATURED.snippet}</code></pre>
               </div>
