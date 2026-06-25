@@ -124,7 +124,7 @@ const EXPERIENCE = [
     role: 'Software Engineering Capstone — Team Lead',
     org: 'Georgia State University',
     location: 'Atlanta, GA',
-    range: 'Aug 2025 – Dec 2025',
+    range: 'Jan 2026 – May 2026',
     bullets: [
       'Led a student engineering team building TravelMS, a full-stack travel management platform — running Agile sprints and owning architecture and database schema decisions captured in sprint documentation',
       'Designed a normalized MySQL schema across 5+ entity types enforcing referential integrity, and defined the REST API contract between an Angular/TypeScript frontend and a Node.js/Express backend',
