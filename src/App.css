@@ -569,6 +569,10 @@ section {
   }
 }
 
+.featured-grid.reversed {
+  grid-template-columns: 1.2fr 1fr;
+}
+
 .featured-info {
   display: flex;
   flex-direction: column;

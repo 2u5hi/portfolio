@@ -2,15 +2,16 @@ import { useState, useEffect } from 'react'
 import headshot from './assets/headshot.png'
 import './App.css'
 
-const FEATURED = {
-  name: 'Lendable',
-  file: 'underwriter.py',
-  description:
-    'Full-stack AI mortgage document analyzer that uses Claude Sonnet via AWS Bedrock to natively parse mortgage PDFs — W-2s, pay stubs, bank statements, and Form 1003 — extracting income, FICO tier, DTI, and LTV inputs with cross-document consistency checks to produce structured underwriting recommendations. Secured with Clerk JWT middleware and shipped via Docker and GitHub Actions CI/CD to Fly.io.',
-  tech: ['Python', 'FastAPI', 'React', 'AWS Bedrock', 'DynamoDB', 'S3', 'Docker', 'Fly.io'],
-  github: 'https://github.com/2u5hi/lendable.ai',
-  live: 'https://lendable.fly.dev/',
-  snippet: `async def run_underwriting(doc_keys: list[str]) -> dict:
+const FEATURED = [
+  {
+    name: 'Lendable',
+    file: 'underwriter.py',
+    description:
+      'Full-stack AI mortgage document analyzer that uses Claude Sonnet via AWS Bedrock to natively parse mortgage PDFs — W-2s, pay stubs, bank statements, and Form 1003 — extracting income, FICO tier, DTI, and LTV inputs with cross-document consistency checks to produce structured underwriting recommendations. Secured with Clerk JWT middleware and shipped via Docker and GitHub Actions CI/CD to Fly.io.',
+    tech: ['Python', 'FastAPI', 'React', 'AWS Bedrock', 'DynamoDB', 'S3', 'Docker', 'Fly.io'],
+    github: 'https://github.com/2u5hi/lendable.ai',
+    live: 'https://lendable.fly.dev/',
+    snippet: `async def run_underwriting(doc_keys: list[str]) -> dict:
     # load each mortgage PDF from S3 and pass bytes
     # directly to Claude — no OCR, no text extraction
     content = []
@@ -39,7 +40,50 @@ const FEATURED = {
     return parse_recommendation(
         json.loads(resp["body"].read())["content"][0]["text"]
     )`,
-}
+  },
+  {
+    name: 'AI Podcast Clipper',
+    file: 'main.py',
+    reversed: true,
+    description:
+      'Multi-service pipeline that turns long-form YouTube videos into vertical, captioned short-form clips. A Next.js frontend hands jobs to an Inngest queue, decoupled from a serverless L40S GPU backend on Modal via an S3-key contract. The GPU chain runs WhisperX transcription, Gemini moment selection with schema enforcement and model fallback, active-speaker tracking, and FFmpeg vertical reframing with burned-in captions — hardened with bearer-token auth, per-user concurrency limits, and a recovery path for late-finishing jobs.',
+    tech: ['Next.js', 'TypeScript', 'Python', 'Modal', 'Inngest', 'S3'],
+    github: 'https://github.com/2u5hi/ai-podcast-clipper',
+    snippet: `def process_clip(base_dir, src_video, s3_key, start, end,
+                 idx, transcript_segments):
+    clip_dir = base_dir / f"clip_{idx}"
+    segment = clip_dir / "segment.mp4"
+    audio = clip_dir / "pyavi" / "audio.wav"
+
+    # 1. cut the moment Gemini picked, split off the audio
+    subprocess.run(
+        f"ffmpeg -i {src_video} -ss {start} -t {end - start} {segment}",
+        shell=True, check=True)
+    subprocess.run(
+        f"ffmpeg -i {segment} -vn -acodec pcm_s16le "
+        f"-ar 16000 -ac 1 {audio}", shell=True, check=True)
+
+    # 2. active-speaker detection (TalkNet) to find who's talking
+    subprocess.run(
+        f"python demoTalkNet.py --videoName clip_{idx} "
+        f"--videoFolder {base_dir} --pretrainModel pretrain_TalkSet.model",
+        cwd="/asd", shell=True)
+    tracks = pickle.load(open(clip_dir / "pywork" / "tracks.pckl", "rb"))
+    scores = pickle.load(open(clip_dir / "pywork" / "scores.pckl", "rb"))
+
+    # 3. crop vertical around the speaker, burn captions, watermark
+    create_vertical_video(tracks, scores, frames, audio, vertical_path)
+    create_subtitles_with_ffmpeg(transcript_segments, start, end,
+                                 vertical_path, subtitled, max_words=5)
+    subprocess.run(
+        f'ffmpeg -y -i {subtitled} '
+        f'-vf "drawtext=text={WATERMARK}:x=w-tw-30:y=30:'
+        f'fontcolor=white@0.6:box=1:boxcolor=black@0.3" '
+        f'-c:v h264 -crf 23 -c:a copy {final}', shell=True, check=True)
+
+    s3.upload_file(str(final), BUCKET, output_key)`,
+  },
+]
 
 const PROJECTS = [
   {
@@ -326,37 +370,48 @@ export default function App() {
           <h2 className="section-heading fade-in">
             <span className="num">03.</span> Things I've Built
           </h2>
-          <div className="featured-project fade-in">
-            <p className="featured-label">Featured Project</p>
-            <div className="featured-grid">
-              <div className="featured-info">
-                <h3 className="featured-name">{FEATURED.name}</h3>
+          {FEATURED.map((f) => {
+            const info = (
+              <div className="featured-info" key="info">
+                <h3 className="featured-name">{f.name}</h3>
                 <div className="featured-desc-box">
-                  <p>{FEATURED.description}</p>
+                  <p>{f.description}</p>
                 </div>
                 <ul className="featured-tech">
-                  {FEATURED.tech.map((t) => <li key={t}>{t}</li>)}
+                  {f.tech.map((t) => <li key={t}>{t}</li>)}
                 </ul>
                 <div className="featured-links">
-                  <a href={FEATURED.github} target="_blank" rel="noreferrer" aria-label={`${FEATURED.name} GitHub`}>
+                  <a href={f.github} target="_blank" rel="noreferrer" aria-label={`${f.name} GitHub`}>
                     <GitHubIcon />
                   </a>
-                  <a href={FEATURED.live} target="_blank" rel="noreferrer" aria-label={`${FEATURED.name} live`}>
-                    <ExternalIcon />
-                  </a>
+                  {f.live && (
+                    <a href={f.live} target="_blank" rel="noreferrer" aria-label={`${f.name} live`}>
+                      <ExternalIcon />
+                    </a>
+                  )}
                 </div>
               </div>
-              <div className="code-window">
+            )
+            const code = (
+              <div className="code-window" key="code">
                 <div className="code-chrome">
                   <span className="chrome-dot dot-red" />
                   <span className="chrome-dot dot-yellow" />
                   <span className="chrome-dot dot-green" />
-                  <span className="chrome-file">{FEATURED.file}</span>
+                  <span className="chrome-file">{f.file}</span>
                 </div>
-                <pre className="code-body"><code>{FEATURED.snippet}</code></pre>
+                <pre className="code-body"><code>{f.snippet}</code></pre>
               </div>
-            </div>
-          </div>
+            )
+            return (
+              <div className="featured-project fade-in" key={f.name}>
+                <p className="featured-label">Featured Project</p>
+                <div className={`featured-grid${f.reversed ? ' reversed' : ''}`}>
+                  {f.reversed ? [code, info] : [info, code]}
+                </div>
+              </div>
+            )
+          })}
 
           <p className="other-projects-label">Other Projects</p>
           <div className="projects-grid">
