@@ -111,6 +111,13 @@ const PROJECTS = [
     github: 'https://github.com/2u5hi/midas-core',
   },
   {
+    name: 'JJS Gamepad',
+    description:
+      'Low-latency input remapper translating keyboard and mouse into a virtual Xbox 360 controller at ~250 Hz via the ViGEmBus driver. Features raw mouse capture compatible with pointer lock, input suppression to prevent device-mode flickering, and configurable right-stick camera smoothing with decay.',
+    tech: ['Python', 'vgamepad', 'ViGEmBus', 'Win32 Raw Input'],
+    github: 'https://github.com/2u5hi/jjs_gamepad',
+  },
+  {
     name: 'Daikibo Analysis',
     description:
       'Telemetry analysis across 4 global Daikibo facilities with interactive Tableau dashboards identifying downtime by factory and device type. Includes gender pay equity classification using conditional scoring formulas.',
