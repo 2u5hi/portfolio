@@ -497,6 +497,31 @@ section {
   flex-wrap: wrap;
 }
 
+.timeline-heading {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.timeline-logo {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid var(--border-subtle);
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.timeline-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
 .timeline-role {
   font-size: 1rem;
   color: var(--text-white);

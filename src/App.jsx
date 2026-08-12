@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import headshot from './assets/headshot.png'
+import risingForceLogo from './assets/rising-force-direct.png'
 import './App.css'
 
 const FEATURED = [
@@ -127,6 +128,17 @@ const PROJECTS = [
 ]
 
 const EXPERIENCE = [
+  {
+    role: 'Technology Specialist',
+    org: 'Rising Force Direct',
+    logo: risingForceLogo,
+    location: 'Atlanta, GA',
+    range: 'Aug 2026 – Present',
+    bullets: [
+      'Advised customers on AT&T fiber, wireless, and connected-device products, translating technical specifications and network trade-offs into plain-language recommendations and resolving setup and troubleshooting questions on the spot',
+      'Built and delivered sales pitches for SaaS tools and self-built software products to business prospects, owning the demo, objection handling, and follow-up',
+    ],
+  },
   {
     role: 'Software Engineering Capstone — Team Lead',
     org: 'Georgia State University',
@@ -266,7 +278,7 @@ export default function App() {
             <button className="btn-nav">Resume ▾</button>
             <ul className="resume-menu">
               <li>
-                <a href="/Dhanush Annoji SWE.pdf" target="_blank" rel="noreferrer">
+                <a href="/Dhanush Annoji SWE v2.pdf" target="_blank" rel="noreferrer">
                   Software Engineer
                 </a>
               </li>
@@ -368,9 +380,16 @@ export default function App() {
                 <div className="timeline-dot" />
                 <div className="timeline-content">
                   <div className="timeline-header">
-                    <div>
-                      <h3 className="timeline-role">{e.role}</h3>
-                      <p className="timeline-org">{e.org} <span className="timeline-location">· {e.location}</span></p>
+                    <div className="timeline-heading">
+                      {e.logo && (
+                        <div className="timeline-logo">
+                          <img src={e.logo} alt={`${e.org} logo`} />
+                        </div>
+                      )}
+                      <div>
+                        <h3 className="timeline-role">{e.role}</h3>
+                        <p className="timeline-org">{e.org} <span className="timeline-location">· {e.location}</span></p>
+                      </div>
                     </div>
                     <span className="timeline-range">{e.range}</span>
                   </div>
