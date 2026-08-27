@@ -8,13 +8,13 @@ const FEATURED = [
     name: 'Lendable',
     file: 'underwriter.py',
     description:
-      'Full-stack AI mortgage document analyzer that uses Claude Sonnet via AWS Bedrock to natively parse mortgage PDFs — W-2s, pay stubs, bank statements, and Form 1003 — extracting income, FICO tier, DTI, and LTV inputs with cross-document consistency checks to produce structured underwriting recommendations. Secured with Clerk JWT middleware and shipped via Docker and GitHub Actions CI/CD to Fly.io.',
+      'Full-stack AI mortgage document analyzer that uses Claude Sonnet via AWS Bedrock to natively parse mortgage PDFs (W-2s, pay stubs, bank statements, and Form 1003), extracting income, FICO tier, DTI, and LTV inputs with cross-document consistency checks to produce structured underwriting recommendations. Secured with Clerk JWT middleware and shipped via Docker and GitHub Actions CI/CD to Fly.io.',
     tech: ['Python', 'FastAPI', 'React', 'AWS Bedrock', 'DynamoDB', 'S3', 'Docker', 'Fly.io'],
     github: 'https://github.com/2u5hi/lendable.ai',
     live: 'https://lendable.fly.dev/',
     snippet: `async def run_underwriting(doc_keys: list[str]) -> dict:
     # load each mortgage PDF from S3 and pass bytes
-    # directly to Claude — no OCR, no text extraction
+    # directly to Claude, no OCR, no text extraction
     content = []
     for key in doc_keys:
         obj = await s3.get_object(Bucket=BUCKET, Key=key)
@@ -47,7 +47,7 @@ const FEATURED = [
     file: 'main.py',
     reversed: true,
     description:
-      'Multi-service pipeline that turns long-form YouTube videos into vertical, captioned short-form clips. A Next.js frontend hands jobs to an Inngest queue, decoupled from a serverless L40S GPU backend on Modal via an S3-key contract. The GPU chain runs WhisperX transcription, Gemini moment selection with schema enforcement and model fallback, active-speaker tracking, and FFmpeg vertical reframing with burned-in captions — hardened with bearer-token auth, per-user concurrency limits, and a recovery path for late-finishing jobs.',
+      'Multi-service pipeline that turns long-form YouTube videos into vertical, captioned short-form clips. A Next.js frontend hands jobs to an Inngest queue, decoupled from a serverless L40S GPU backend on Modal via an S3-key contract. The GPU chain runs WhisperX transcription, Gemini moment selection with schema enforcement and model fallback, active-speaker tracking, and FFmpeg vertical reframing with burned-in captions, hardened with bearer-token auth, per-user concurrency limits, and a recovery path for late-finishing jobs.',
     tech: ['Next.js', 'TypeScript', 'Python', 'Modal', 'Inngest', 'S3'],
     github: 'https://github.com/2u5hi/ai-podcast-clipper',
     snippet: `def process_clip(base_dir, src_video, s3_key, start, end,
@@ -135,17 +135,18 @@ const EXPERIENCE = [
     location: 'Atlanta, GA',
     range: 'Aug 2026 – Present',
     bullets: [
-      'Advised customers on AT&T fiber, wireless, and connected-device products, translating technical specifications and network trade-offs into plain-language recommendations and resolving setup and troubleshooting questions on the spot',
-      'Built and delivered sales pitches for SaaS tools and self-built software products to business prospects, owning the demo, objection handling, and follow-up',
+      'Promoted to leadership in first week, clearing the company Alpha standard of $1,700+ in sales',
+      'Delivered sales pitches to consumers for AT&T Fiber and Premium 2.0',
+      'Built SaaS pitching experience, sharpening both technical depth and sales acumen',
     ],
   },
   {
-    role: 'Software Engineering Capstone — Team Lead',
+    role: 'Software Engineering Capstone · Team Lead',
     org: 'Georgia State University',
     location: 'Atlanta, GA',
     range: 'Jan 2026 – May 2026',
     bullets: [
-      'Led a student engineering team building TravelMS, a full-stack travel management platform — running Agile sprints and owning architecture and database schema decisions captured in sprint documentation',
+      'Led a student engineering team building TravelMS, a full-stack travel management platform, running Agile sprints and owning architecture and database schema decisions captured in sprint documentation',
       'Designed a normalized MySQL schema across 5+ entity types enforcing referential integrity, and defined the REST API contract between an Angular/TypeScript frontend and a Node.js/Express backend',
       'Coordinated task distribution and integration across the team, delivering route-based views with real-time data binding',
     ],
@@ -171,7 +172,7 @@ const EXPERIENCE = [
     ],
   },
   {
-    role: 'B.S. Computer Science — Honors College',
+    role: 'B.S. Computer Science · Honors College',
     org: 'Georgia State University',
     location: 'Atlanta, GA',
     range: 'Aug 2023 – May 2026',
@@ -278,7 +279,7 @@ export default function App() {
             <button className="btn-nav">Resume ▾</button>
             <ul className="resume-menu">
               <li>
-                <a href="/Dhanush Annoji SWE v2.pdf" target="_blank" rel="noreferrer">
+                <a href="/Dhanush_Annoji_SWE_Resume.pdf" target="_blank" rel="noreferrer">
                   Software Engineer
                 </a>
               </li>
@@ -300,7 +301,7 @@ export default function App() {
           <h2 className="hero-sub-name">Software Engineer</h2>
           <p className="hero-desc">
             Computer Science graduate from Georgia State University’s Honors College.
-            I build things that work — quantitative research tools, full-stack applications, and backend systems designed for real-world use.
+            I build things that work: quantitative research tools, full-stack applications, and backend systems designed for real-world use.
           </p>
           <div className="hero-actions">
             <a href="#projects" className="btn btn-primary">
@@ -342,10 +343,10 @@ export default function App() {
           <div className="about-grid">
             <div className="about-text fade-in" style={{ transitionDelay: '100ms' }}>
               <p>
-                I recently graduated from Georgia State University’s Honors College with a B.S. in Computer Science. My work sits at the intersection of backend engineering and data — from building a quantitative research platform that scores equity inefficiencies using ARIMA and autocorrelation analysis, to designing normalized schemas and RESTful APIs across full-stack applications.
+                I recently graduated from Georgia State University’s Honors College with a B.S. in Computer Science. My work sits at the intersection of backend engineering and data, from building a quantitative research platform that scores equity inefficiencies using ARIMA and autocorrelation analysis, to designing normalized schemas and RESTful APIs across full-stack applications.
               </p>
               <p>
-                Outside of personal projects, I consulted for NGAO Security where I rebuilt their client-facing web presence and cut service request turnaround by 40%. I’m drawn to problems where correctness actually matters — systems that have to hold up under real load, not just in demos.
+                Outside of personal projects, I consulted for NGAO Security where I rebuilt their client-facing web presence and cut service request turnaround by 40%. I’m drawn to problems where correctness actually matters, systems that have to hold up under real load, not just in demos.
               </p>
               <p>Here are some technologies I’ve been working with recently:</p>
               <div className="skills-grid">
@@ -496,7 +497,7 @@ export default function App() {
           <p className="contact-sub fade-in" style={{ transitionDelay: '100ms' }}>Get In Touch</p>
           <p className="contact-desc fade-in" style={{ transitionDelay: '200ms' }}>
             I'm currently open to new opportunities. Whether you have a question, a project idea,
-            or just want to say hi — my inbox is always open.
+            or just want to say hi, my inbox is always open.
           </p>
           <a href="mailto:dhanushannoji@gmail.com" className="btn btn-primary btn-lg fade-in" style={{ transitionDelay: '300ms' }}>
             Say Hello
