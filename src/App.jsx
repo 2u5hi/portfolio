@@ -129,7 +129,7 @@ const PROJECTS = [
 
 const EXPERIENCE = [
   {
-    role: 'Technology Specialist',
+    role: 'Account Manager',
     org: 'Rising Force Direct',
     logo: risingForceLogo,
     location: 'Atlanta, GA',
@@ -279,7 +279,7 @@ export default function App() {
             <button className="btn-nav">Resume ▾</button>
             <ul className="resume-menu">
               <li>
-                <a href="/Dhanush_Annoji_SWE_Resume.pdf" target="_blank" rel="noreferrer">
+                <a href="/Dhanush_Annoji_SWE_Resume.pdf?v=2026-09-16" target="_blank" rel="noreferrer">
                   Software Engineer
                 </a>
               </li>
