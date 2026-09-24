@@ -5,7 +5,90 @@ import './App.css'
 
 const FEATURED = [
   {
+    name: 'Cloud WMS with Agentic AI',
+    description:
+      'Warehouse management system with a Claude-powered operations agent built in. The Spring Boot core handles ledger-based inventory, wave planning, replenishment, and certified task execution, kept correct under concurrency with database-enforced invariants, deadlock-free row locking, and idempotent commands, verified by 240+ tests including 50-way concurrent runs. The agent diagnoses blocked waves through read-only WMS tools and files fixes a supervisor must approve. Deployed serverless on AWS via Terraform and GitHub Actions OIDC, with keyless Claude access through workload identity federation.',
+    tech: ['Java', 'Spring Boot', 'MySQL', 'Python', 'FastAPI', 'Claude API', 'React', 'AWS Lambda', 'Terraform'],
+    github: 'https://github.com/2u5hi/cloud-wms-agentic-ai',
+    live: 'https://dana7rqasft6b.cloudfront.net',
+    snippets: [
+      {
+        file: 'agent.py',
+        code: `async def investigate(self, wave: int, question: str | None = None):
+    # the diagnosis is deterministic and cheap, so fetch it up front:
+    # the model spends tokens explaining and deciding, not joining tables
+    self._budget.check()
+    diagnosis = await self._wms.diagnosis(wave)
+    pending = await self._wms.open_proposals(wave)
+    messages = [{"role": "user", "content": prompt(wave, question,
+                                                   diagnosis, pending)}]
+
+    for _ in range(self._settings.max_tool_calls + 1):
+        response = await self._client.messages.create(
+            model=self._settings.model,
+            system=SYSTEM_PROMPT,
+            tools=TOOLS,          # read-only tools + a final \`report\`
+            messages=messages,
+        )
+        self._budget.record(cost_of(response.usage))
+
+        uses = [b for b in response.content if b.type == "tool_use"]
+        report = next((u for u in uses if u.name == "report"), None)
+        if report is not None:
+            # the agent never mutates the warehouse: each fix is filed
+            # as a proposal the WMS validates and a supervisor approves
+            return await self._finish(wave, report.input)
+
+        results = [{"type": "tool_result", "tool_use_id": u.id,
+                    "content": json.dumps(await run_tool(u.name, u.input,
+                                                         self._wms))}
+                   for u in uses]
+        messages.append({"role": "assistant", "content": response.content})
+        messages.append({"role": "user", "content": results})`,
+      },
+      {
+        file: 'TaskRepository.java',
+        code: `/**
+ * Candidates are read without locking, then claimed with a conditional
+ * update: whoever's update changes the row wins. ORDER BY ... LIMIT 1
+ * FOR UPDATE SKIP LOCKED looks simpler but is wrong here: MySQL locks
+ * every row it scans before sorting, so the first worker would lock
+ * the whole queue.
+ */
+Optional<Long> claimNext(long workerId, Long homeZoneId, Long zoneId) {
+    List<Long> candidates = jdbc.sql("""
+            SELECT t.id FROM task t
+            JOIN wave w ON w.id = t.wave_id
+            WHERE t.status = 'READY'
+              AND w.status IN ('RELEASED', 'IN_PROGRESS')
+              AND (:zone IS NULL OR t.zone_id = :zone)
+              AND (t.required_equipment IS NULL OR EXISTS (
+                    SELECT 1 FROM worker_equipment we
+                    WHERE we.worker_id = :workerId
+                      AND we.equipment = t.required_equipment))
+            ORDER BY t.priority, (t.type = 'REPLENISH') DESC,
+                     (t.zone_id <=> :homeZone) DESC, t.sequence, t.id
+            LIMIT :candidates""")
+        .param("workerId", workerId).param("homeZone", homeZoneId)
+        .param("zone", zoneId).param("candidates", CLAIM_CANDIDATES)
+        .query(Long.class).list();
+
+    for (Long candidate : candidates) {
+        int claimed = jdbc.sql("""
+                UPDATE task SET status = 'ASSIGNED',
+                    assigned_worker_id = ?, version = version + 1
+                WHERE id = ? AND status = 'READY'""")
+            .params(workerId, candidate).update();
+        if (claimed == 1) return Optional.of(candidate);
+    }
+    return Optional.empty();
+}`,
+      },
+    ],
+  },
+  {
     name: 'Lendable',
+    reversed: true,
     file: 'underwriter.py',
     description:
       'Full-stack AI mortgage document analyzer that uses Claude Sonnet via AWS Bedrock to natively parse mortgage PDFs (W-2s, pay stubs, bank statements, and Form 1003), extracting income, FICO tier, DTI, and LTV inputs with cross-document consistency checks to produce structured underwriting recommendations. Secured with Clerk JWT middleware and shipped via Docker and GitHub Actions CI/CD to Fly.io.',
@@ -45,7 +128,6 @@ const FEATURED = [
   {
     name: 'AI Podcast Clipper',
     file: 'main.py',
-    reversed: true,
     description:
       'Multi-service pipeline that turns long-form YouTube videos into vertical, captioned short-form clips. A Next.js frontend hands jobs to an Inngest queue, decoupled from a serverless L40S GPU backend on Modal via an S3-key contract. The GPU chain runs WhisperX transcription, Gemini moment selection with schema enforcement and model fallback, active-speaker tracking, and FFmpeg vertical reframing with burned-in captions, hardened with bearer-token auth, per-user concurrency limits, and a recovery path for late-finishing jobs.',
     tech: ['Next.js', 'TypeScript', 'Python', 'Modal', 'Inngest', 'S3'],
@@ -186,7 +268,7 @@ const EXPERIENCE = [
 const SKILLS = {
   Languages: ['Python', 'JavaScript', 'TypeScript', 'Java', 'SQL', 'HTML/CSS'],
   Frameworks: ['React', 'Angular', 'FastAPI', 'Spring Boot', 'Node.js', 'Express', 'Pandas'],
-  Tools: ['Git', 'Docker', 'AWS', 'MySQL', 'Apache Kafka', 'Vercel', 'Fly.io', 'Tableau'],
+  Tools: ['Git', 'Docker', 'AWS', 'Terraform', 'MySQL', 'Apache Kafka', 'Vercel', 'Fly.io', 'Tableau'],
 }
 
 function GitHubIcon() {
@@ -218,6 +300,37 @@ function ExternalIcon() {
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18" aria-hidden="true">
       <path strokeLinecap="round" strokeLinejoin="round" d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3" />
     </svg>
+  )
+}
+
+function CodeWindow({ snippets }) {
+  const [active, setActive] = useState(0)
+  return (
+    <div className="code-window">
+      <div className="code-chrome">
+        <span className="chrome-dot dot-red" />
+        <span className="chrome-dot dot-yellow" />
+        <span className="chrome-dot dot-green" />
+        {snippets.length === 1 ? (
+          <span className="chrome-file">{snippets[0].file}</span>
+        ) : (
+          <div className="chrome-tabs" role="tablist">
+            {snippets.map((s, i) => (
+              <button
+                key={s.file}
+                role="tab"
+                aria-selected={i === active}
+                className={`chrome-tab${i === active ? ' active' : ''}`}
+                onClick={() => setActive(i)}
+              >
+                {s.file}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+      <pre className="code-body"><code>{snippets[active].code}</code></pre>
+    </div>
   )
 }
 
@@ -279,7 +392,7 @@ export default function App() {
             <button className="btn-nav">Resume ▾</button>
             <ul className="resume-menu">
               <li>
-                <a href="/Dhanush_Annoji_SWE_Resume.pdf?v=2026-09-16" target="_blank" rel="noreferrer">
+                <a href="/Dhanush_Annoji_SWE_Resume.pdf?v=2026-09-24" target="_blank" rel="noreferrer">
                   Software Engineer
                 </a>
               </li>
@@ -431,15 +544,7 @@ export default function App() {
               </div>
             )
             const code = (
-              <div className="code-window" key="code">
-                <div className="code-chrome">
-                  <span className="chrome-dot dot-red" />
-                  <span className="chrome-dot dot-yellow" />
-                  <span className="chrome-dot dot-green" />
-                  <span className="chrome-file">{f.file}</span>
-                </div>
-                <pre className="code-body"><code>{f.snippet}</code></pre>
-              </div>
+              <CodeWindow key="code" snippets={f.snippets ?? [{ file: f.file, code: f.snippet }]} />
             )
             return (
               <div className="featured-project fade-in" key={f.name}>
