@@ -400,6 +400,76 @@ section {
   flex-shrink: 0;
 }
 
+.certifications {
+  margin-top: 24px;
+}
+
+.certifications h4 {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+  font-weight: 400;
+}
+
+.cert-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--accent-border);
+  border-radius: 6px;
+  max-width: 520px;
+}
+
+.cert-card svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.cert-card > div {
+  min-width: 0;
+}
+
+.certifications .cert-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-bright);
+  line-height: 1.3;
+  margin: 0;
+}
+
+.certifications .cert-issuer {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--accent);
+  margin: 2px 0 8px;
+}
+
+.certifications ul li {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--text);
+  padding: 3px 0;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.certifications ul li::before {
+  content: '▸';
+  color: var(--accent);
+  font-size: 0.7rem;
+  flex-shrink: 0;
+}
+
+.certifications .cert-meta {
+  opacity: 0.6;
+}
+
 .about-img {
   display: flex;
   justify-content: center;

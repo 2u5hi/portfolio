@@ -240,7 +240,7 @@ const EXPERIENCE = [
     range: 'Apr 2025 – Aug 2025',
     bullets: [
       "Rebuilt the company's client-facing website from scratch in HTML, CSS, and JavaScript, redesigning the service request workflow so clients can find a service and submit a request in fewer steps",
-      "Restructured the site's page hierarchy and semantic markup for search indexing, turning requirements from stakeholder sessions into features shipped in Agile iterations",
+      "Restructured the site's page hierarchy and semantic markup for search indexing and SEO, turning requirements from stakeholder sessions into features shipped in Agile iterations",
     ],
   },
   {
@@ -269,6 +269,26 @@ const SKILLS = {
   Languages: ['Python', 'JavaScript', 'TypeScript', 'Java', 'SQL', 'HTML/CSS'],
   Frameworks: ['React', 'Angular', 'FastAPI', 'Spring Boot', 'Node.js', 'Express', 'Pandas'],
   Tools: ['Git', 'Docker', 'AWS', 'Terraform', 'MySQL', 'Apache Kafka', 'Vercel', 'Fly.io', 'Tableau'],
+}
+
+const CERTIFICATION = {
+  title: 'Microsoft Technology Associate',
+  issuer: 'Issued by Microsoft',
+  exams: [
+    { name: 'Introduction to Programming Using Java' },
+    { name: 'Software Development Fundamentals', date: 'Apr 2022' },
+  ],
+}
+
+function MicrosoftLogo() {
+  return (
+    <svg viewBox="0 0 23 23" width="36" height="36" aria-hidden="true">
+      <rect x="1" y="1" width="10" height="10" fill="#f25022" />
+      <rect x="12" y="1" width="10" height="10" fill="#7fba00" />
+      <rect x="1" y="12" width="10" height="10" fill="#00a4ef" />
+      <rect x="12" y="12" width="10" height="10" fill="#ffb900" />
+    </svg>
+  )
 }
 
 function GitHubIcon() {
@@ -473,6 +493,26 @@ export default function App() {
                     </ul>
                   </div>
                 ))}
+              </div>
+              <div className="certifications">
+                <h4>Certifications</h4>
+                <div className="cert-card">
+                  <MicrosoftLogo />
+                  <div>
+                    <p className="cert-title">{CERTIFICATION.title}</p>
+                    <p className="cert-issuer">{CERTIFICATION.issuer}</p>
+                    <ul>
+                      {CERTIFICATION.exams.map((e) => (
+                        <li key={e.name}>
+                          <span>
+                            MTA: {e.name}
+                            {e.date && <span className="cert-meta"> · {e.date}</span>}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
               </div>
             </div>
             <div className="about-img fade-in" style={{ transitionDelay: '200ms' }}>
