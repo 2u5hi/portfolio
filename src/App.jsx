@@ -239,8 +239,8 @@ const EXPERIENCE = [
     location: 'Atlanta, GA',
     range: 'Apr 2025 – Aug 2025',
     bullets: [
-      'Rebuilt company website using HTML, CSS, and JavaScript, streamlining service request workflows and reducing update turnaround time by 40%',
-      'Led stakeholder requirement sessions and restructured site architecture for SEO, increasing organic search visibility by 30%',
+      "Rebuilt the company's client-facing website from scratch in HTML, CSS, and JavaScript, redesigning the service request workflow so clients can find a service and submit a request in fewer steps",
+      "Restructured the site's page hierarchy and semantic markup for search indexing, turning requirements from stakeholder sessions into features shipped in Agile iterations",
     ],
   },
   {
@@ -392,7 +392,7 @@ export default function App() {
             <button className="btn-nav">Resume ▾</button>
             <ul className="resume-menu">
               <li>
-                <a href="/Dhanush_Annoji_SWE_Resume.pdf?v=2026-09-24" target="_blank" rel="noreferrer">
+                <a href="/Dhanush_Annoji_SWE_Resume_2026-10-29.pdf" target="_blank" rel="noreferrer">
                   Software Engineer
                 </a>
               </li>
@@ -459,7 +459,7 @@ export default function App() {
                 I recently graduated from Georgia State University’s Honors College with a B.S. in Computer Science. My work sits at the intersection of backend engineering and data, from building a quantitative research platform that scores equity inefficiencies using ARIMA and autocorrelation analysis, to designing normalized schemas and RESTful APIs across full-stack applications.
               </p>
               <p>
-                Outside of personal projects, I consulted for NGAO Security where I rebuilt their client-facing web presence and cut service request turnaround by 40%. I’m drawn to problems where correctness actually matters, systems that have to hold up under real load, not just in demos.
+                Outside of personal projects, I consulted for NGAO Security where I rebuilt their client-facing website and redesigned how clients request service. I’m drawn to problems where correctness actually matters, systems that have to hold up under real load, not just in demos.
               </p>
               <p>Here are some technologies I’ve been working with recently:</p>
               <div className="skills-grid">
